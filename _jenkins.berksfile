@@ -1,0 +1,3 @@
+cookbook 'jenkins'
+cookbook 'chef-streambot-jenkins', git: 'git@bitbucket.org:streambot/chef-streambot.git', rel: 'cookbooks/chef-streambot-jenkins', protocol: :ssh
+cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef-streambot.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh

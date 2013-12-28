@@ -1,5 +1,29 @@
 #!/bin/bash
 
+################################################################################
+# This software is licensed under the MIT License (MIT)
+#
+# Copyright (c) 2013 Martin Biermann
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+################################################################################
+
 set -e
 # set -x
 
@@ -172,20 +196,27 @@ function setup_instance {
   # lets install chef-solo to the instance
   remote_call "curl -L https://www.opscode.com/chef/install.sh | sudo bash"
 
-  # Now we inject the chef repository to the instance.
+  # Ensure a clean work space by deleting any previous located directory there
   rm -rf $CWD
+
+  mkdir -p $CWD/tmp
+  cd $CWD/tmp
   # Check out the correct branch if given
   git clone $CHEF_GIT --branch $GIT_BRANCH
+  chef_dir=`echo $CHEF_GIT | sed 's/.*\/\([^\/\.]*\)\.git/\1/g'`
   
-  cd $CWD
+  cd $chef_dir
   # Its safe to call the submodule commands here
   # even if the repos does not have any of these.
   git submodule init
   git submodule update
+  cd ../../
 
-  cat _Cheffile "_${CHEF_ROLE}.cheffile" > Cheffile
-  librarian-chef install
-  ls
+  cp -R tmp/$chef_dir/* .
+  rm -rf tmp/$chef_dir
+
+  cat ../_Berksfile ../"_${CHEF_ROLE}.berksfile" > Berksfile
+  berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
   # Since chef-solo can only handle:
@@ -197,7 +228,7 @@ function setup_instance {
   # Make sure your repository has this folder structure - otherwise this
   # might not work! We don't need to delete old tarballs since tar itself
   # will override an existing file called chef.tar.gz.
-  tar czf chef.tar.gz environments/ roles/ cookbooks/ site-cookbooks/ #data_bags/
+  tar czf chef.tar.gz environments/ roles/ cookbooks/ #site-cookbooks/ #data_bags/
 
   # Now copy the chef tarball to the instance
   remote_call "sudo mkdir -p /var/chef/"
@@ -279,13 +310,6 @@ function generate_ami {
   done
 }
 
-# Here we will cleanup everything after ami was created.
-function clean_up {
-  # From now we are only deleting the instance again.
-  ec2-terminate-instances $instanceId --region $REGION --aws-access-key $AWS_KEY \
-  --aws-secret-key $AWS_SECRET_KEY
-}
-
 
 function read_args {
   h "Reading arguments"
@@ -315,7 +339,7 @@ function read_args {
   done
   # filter the repo name from the git_chef
   echo "--> Instance name: ${INSTANCE_NAME}"
-  CWD=`echo $CHEF_GIT | sed 's/git@bitbucket.org:streambot\/\([^.]*\)\.git/\1/g'`
+  CWD="create_ami_${INSTANCE_NAME}_`date -u | sed -e 's/\ /-/g'`"
   echo "--> Git branch: ${GIT_BRANCH}"
   echo "--> AWS key: ${AWS_KEY}"
   echo "--> AWS secret key: ${AWS_SECRET_KEY}"
@@ -334,6 +358,29 @@ function read_args {
   echo "--> SSH max connection attempts: ${SSH_ATTEMPTS}"
 }
 
+# Here we will cleanup everything after ami was created.
+# This basically means to run all pending stack commands.
+function clean_up {
+  h "Cleaning up"
+  # Before calling deactivate the strict check for the commands return values (`set -e`) 
+  # so that commands do not interfere.
+  set +e
+  # If there is an instanceId, terminate the instance referenced by the ID
+  if [ "$instanceId" != "" ]; then
+    ec2-terminate-instances $instanceId \
+    --region $REGION \
+    --aws-access-key $AWS_KEY \
+    --aws-secret-key $AWS_SECRET_KEY
+  fi
+  # Now get back to strict check mode
+  set -e
+  # Remove the working directory
+  rm -rf $CWD
+}
+
+# On ir-/regular exit, invoke clean up
+trap '{ clean_up; }' EXIT SIGINT SIGTERM
+
 # Lets start ;)
 read_args $@
 start_instance
@@ -341,7 +388,6 @@ remote_test
 setup_instance $@
 test_instance
 generate_ami $@
-clean_up
 
 # echo ami id to easily copy jenkins output
 echo "AMI-ID: $amiId"
