@@ -30,7 +30,7 @@ set -x
 sudo aptitude update
 sudo aptitude -y safe-upgrade
 
-sudo aptitude install -y ruby1.9.1 ruby1.9.1-dev build-essential wget libruby1.9.1 rubygems
+sudo aptitude install -y ruby1.9.1 ruby1.9.1-dev wget libruby1.9.1 rubygems
 sudo gem1.9.1 update --no-rdoc --no-ri
 # sudo gem1.9.1 install ohai chef --no-rdoc --no-ri
 

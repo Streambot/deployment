@@ -261,7 +261,7 @@ EOC"
   echo "--> Running Chef Solo"
   # Now there must be a file created at /root/attributes.json which will now
   # be called with chef-solo
-  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json"
+  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json -l debug"
 }
 
 # This one will test whether our ami is ready to be created.
