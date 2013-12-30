@@ -25,7 +25,7 @@
 ################################################################################
 
 set -e
-# set -x
+set -x
 
 #/ Expected environmental variables:
 #/  AMI_ID:             The ami id for a vanilla ubuntu.
@@ -206,12 +206,8 @@ function setup_instance {
   # even if the repos does not have any of these.
   git submodule init
   git submodule update
-  cd ../../
 
-  cp -R tmp/$chef_dir/* .
-  rm -rf tmp/$chef_dir
-
-  cat ../_Berksfile ../"_${CHEF_ROLE}.berksfile" > Berksfile
+  cat ../../../_Berksfile ../../../"_${CHEF_ROLE}.berksfile" > Berksfile
   berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
@@ -230,7 +226,6 @@ function setup_instance {
   remote_call "sudo mkdir -p /var/chef/"
   remote_send chef.tar.gz /tmp/
   remote_call "sudo tar -xzf /tmp/chef.tar.gz -C /var/chef/"
-  cd ../
 
   # Generate solo.rb
   echo "--> Setting up solo.rb"
@@ -250,7 +245,7 @@ EOC"
 
   # Now we inject the correct/given provisioning script to the machine
   echo "--> Run custom provision script"
-  remote_send "_${CHEF_ROLE}.provision.sh" /tmp/provision.sh
+  remote_send ../../../"_${CHEF_ROLE}.provision.sh" /tmp/provision.sh
   # After injection is done, we simple call the provisioning script.
   remote_call "bash /tmp/provision.sh $@"
 
