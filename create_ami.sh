@@ -27,33 +27,6 @@
 set -e
 set -x
 
-#/ Expected environmental variables:
-#/  AMI_ID:             The ami id for a vanilla ubuntu.
-#/  SG_ID:              The security group id.
-#/  INSTANCE_TYPE:      The aws instance type - ex. m1.large.
-#/  SUBNET:             The subnet id.
-#/  ROOT_SIZE:          The size for your root volume. If not specified this will not be changed.
-#/  REGION:             The aws region where the instance is spawned.
-#/  ACCEPTANCE_TEST:    The script called after the provisioning to check that the ami is valid!
-#/  CHEF_GIT:           The git url for the chef-repository that will be injected.
-#/  CHEF_ROLE:          The chef role that will be provisioned.
-#/  CHEF_ENV:           The chef environment set in your solo.rb file.
-#/  GIT_BRANCH:      The chef branch that will be checked out. If not set this will be reset to master.
-#/  VERSION:            The version of the ami. This will be part of the name. If one does not specify the parameter the current date (%Y-%m-%d-%H-%M) will be taken.
-#/
-
-INSTANCE_NAME=
-KEY_PAIR=
-KEY_PAIR_NAME=
-INSTANCE_TYPE=
-SUBNET=
-SG_ID=
-AMI_ID=
-REGION=
-CHEF_GIT=
-CHEF_ENV=
-CHEF_ROLE=
-CWD=
 SSH_TIMEOUT="300"
 SSH_ATTEMPTS="3"
 SSH_TRIES="30"
@@ -207,7 +180,7 @@ function setup_instance {
   git submodule init
   git submodule update
 
-  cat ../../../_Berksfile ../../../"_${CHEF_ROLE}.berksfile" > Berksfile
+  cp $BERKSHELF_SRC/"${CHEF_ROLE}.berksfile" Berksfile
   berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
@@ -306,6 +279,7 @@ function read_args {
     key="$1"
     shift
     case $key in
+      -c|--berkshelf-src) BERKSHELF_SRC="$1" ;;
       -b|--git-branch) GIT_BRANCH="$1" ;;
       -p|--key-pair) KEY_PAIR="$1" ;;
       -d|--key-pair-name) KEY_PAIR_NAME="$1" ;;
@@ -325,6 +299,7 @@ function read_args {
   # filter the repo name from the git_chef
   echo "--> Instance name: ${INSTANCE_NAME}"
   CWD="create_ami_${INSTANCE_NAME}_`date -u | sed -e 's/\ /-/g'`"
+  echo "--> Berkshelf sources: ${BERKSHELF_SRC}"
   echo "--> Git branch: ${GIT_BRANCH}"
   echo "--> Key pair: ${KEY_PAIR}"
   echo "--> Key pair name: ${KEY_PAIR_NAME}"

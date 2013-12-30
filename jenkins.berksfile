@@ -1,3 +1,5 @@
+site :opscode
+
 cookbook 'jenkins'
 cookbook 'aws_developer_tools'
 cookbook 'chef-streambot-jenkins', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-jenkins', protocol: :ssh
