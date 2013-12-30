@@ -45,8 +45,6 @@ set -e
 INSTANCE_NAME=
 KEY_PAIR=
 KEY_PAIR_NAME=
-AWS_KEY=
-AWS_SECRET_KEY=
 INSTANCE_TYPE=
 SUBNET=
 SG_ID=
@@ -59,6 +57,9 @@ CWD=
 SSH_TIMEOUT="300"
 SSH_ATTEMPTS="3"
 SSH_TRIES="30"
+
+[ "$DEBUG" != "true" ] && DEBUG=false
+echo "--> Debug mode: $DEBUG"
 
 # Check the VERSION and give it a default value if not set.
 [ "$VERSION" == "" ] && VERSION=`date +%Y-%m-%d-%H-%M`
@@ -154,28 +155,23 @@ function remote_send {
 function start_instance {
   h "Starting instance"
   # Create an instance and ...
-  ec2Cmd="ec2-run-instances $AMI_ID --aws-access-key $AWS_KEY \
-  --aws-secret-key $AWS_SECRET_KEY -g $SG_ID -t $INSTANCE_TYPE \
-  --subnet $SUBNET $BLOCK_DEVICE_MAPPING --region $REGION --key $KEY_PAIR_NAME"
+  ec2Cmd="aws ec2 run-instances \
+ --image-id $AMI_ID \
+ --security-group-ids $SG_ID \
+ --instance-type $INSTANCE_TYPE \
+ --subnet-id $SUBNET $BLOCK_DEVICE_MAPPING \
+ --key-name $KEY_PAIR_NAME"
   echo "--> Command: $ec2Cmd"
-  DATA=`$ec2Cmd | egrep '(INSTANCE|PRIVATEIPADDRESS)' | awk '{print $1","$2}'`
+  response=`$ec2Cmd`
+  instanceId=`echo "$response" | grep InstanceId | sed 's/.*"InstanceId": "\(.*\)".*/\1/'`
+  privateIp=`echo "$response" | grep PrivateIpAddress | sed -n 's/.*"PrivateIpAddress":[^"]*"\([^"]*\)".*/\1/p' | head -1`
 
-  # ... parse the output to get the instance-id and -ip
-  for line in $DATA; do
-    if [[ $line =~ INSTANCE ]]; then
-      instanceId=`echo $line | awk -F, '{print $2}'`
-    elif [[ $line =~ PRIVATEIPADDRESS ]]; then
-      privateIp=`echo $line | awk -F, '{print $2}'`
-    fi
-  done
-
-  [ "$instanceId" = "" ] && echo "Could not read INSTANCE" && exit 1
-  [ "$privateIp" = "" ] && echo "Could not read PRIVATEIPADDRESS" && exit 1
+  [ "$instanceId" = "" ] && echo "Could not read Instance ID" && exit 1
+  [ "$privateIp" = "" ] && echo "Could not read Private IP Address" && exit 1
 
   # Now we tag the intstance with ``Name``. Actually name is
   # not that important here since we terminate the instance afterwards.
-  ec2-create-tags $instanceId --tag Name=${INSTANCE_NAME} \
-  --region $REGION --aws-access-key $AWS_KEY --aws-secret-key $AWS_SECRET_KEY
+  aws ec2 create-tags --resources $instanceId --tag Key=Name,Value=${INSTANCE_NAME} > /dev/null
 }
 
 # This function will provision the instance, which means:
@@ -278,28 +274,24 @@ function test_instance {
 function generate_ami {
   h "Generating AMI"
   # make an image of the instance and ...
-  amiCmd="ec2-create-image $instanceId --name ${INSTANCE_NAME}-${VERSION} --region $REGION \
-  --aws-access-key $AWS_KEY --aws-secret-key $AWS_SECRET_KEY"
-  DATA=`$amiCmd | egrep '(IMAGE)' | awk '{print $1","$2}'`
+  create_ami_cmd="aws ec2 create-image \
+  --instance-id $instanceId \
+  --name ${INSTANCE_NAME}-${VERSION}"
+  echo "--> Command: $create_ami_cmd"
+  response=`$create_ami_cmd`
+  amiId=`echo "$response" | grep ImageId | sed 's/.*"ImageId": "\(.*\)".*/\1/'`
 
-  # ... parse the output to get the amiId
-  for line in $DATA; do
-    if [[ $line =~ IMAGE ]]; then
-      amiId=`echo $line | awk -F, '{print $2}'`
-    fi
-  done
-
-  [ "$amiId" = "" ] && echo "Could not read IMAGE" && exit 1
+  [ "$amiId" = "" ] && echo "Could not read AMI ID" && exit 1
 
   # The create-ami api tool will immediately return and we need to check ourselfs
   # whether ami creation is done successfully. Therefore we poll every 1 min (AMI_EXIST_CHECK_INTERVAL)
   # the current status of the ami.
-  amiCheckCmd="ec2-describe-images $amiId --region $REGION --aws-access-key $AWS_KEY \
-  --aws-secret-key $AWS_SECRET_KEY"
-  amiStatus=`$amiCheckCmd | egrep IMAGE | awk '{print $5}'`
+  amiCheckCmd="aws ec2 describe-images --image-ids $amiId"
+  echo "--> Command: $amiCheckCmd"
+  amiStatus=`echo \`$amiCheckCmd\` | grep '"State":' | sed -n 's/.*"State":[^"]*"\([^"]*\)".*/\1/p' | head -1`
   until [ "$amiStatus" = "available" ]; do
     sleep $AMI_EXIST_CHECK_INTERVAL
-    amiStatus=`$amiCheckCmd | egrep IMAGE | awk '{print $5}'`
+    amiStatus=`echo \`$amiCheckCmd\` | grep '"State":' | sed -n 's/.*"State":[^"]*"\([^"]*\)".*/\1/p' | head -1`
     # To verify we don't stuck in an endless loop we check possible states here.
     # The amiStatus must be one of ['pending', 'available']
     case $amiStatus in
@@ -323,8 +315,6 @@ function read_args {
       -p|--key-pair) KEY_PAIR="$1" ;;
       -d|--key-pair-name) KEY_PAIR_NAME="$1" ;;
       -n|--instance-name) INSTANCE_NAME="$1" ;;
-      -k|--aws-key) AWS_KEY="$1" ;;
-      -c|--aws-secret-key) AWS_SECRET_KEY="$1" ;;
       -i|--instance-type) INSTANCE_TYPE="$1" ;;
       -s|--subnet-id) SUBNET="$1" ;;
       -g|--security-group-id) SG_ID="$1" ;;
@@ -341,8 +331,6 @@ function read_args {
   echo "--> Instance name: ${INSTANCE_NAME}"
   CWD="create_ami_${INSTANCE_NAME}_`date -u | sed -e 's/\ /-/g'`"
   echo "--> Git branch: ${GIT_BRANCH}"
-  echo "--> AWS key: ${AWS_KEY}"
-  echo "--> AWS secret key: ${AWS_SECRET_KEY}"
   echo "--> Key pair: ${KEY_PAIR}"
   echo "--> Key pair name: ${KEY_PAIR_NAME}"
   echo "--> Instance type: ${INSTANCE_TYPE}"
@@ -367,10 +355,7 @@ function clean_up {
   set +e
   # If there is an instanceId, terminate the instance referenced by the ID
   if [ "$instanceId" != "" ]; then
-    ec2-terminate-instances $instanceId \
-    --region $REGION \
-    --aws-access-key $AWS_KEY \
-    --aws-secret-key $AWS_SECRET_KEY
+    aws ec2 terminate-instances --instance-ids $instanceId > /dev/null
   fi
   # Now get back to strict check mode
   set -e
@@ -379,7 +364,9 @@ function clean_up {
 }
 
 # On ir-/regular exit, invoke clean up
-trap '{ clean_up; }' EXIT SIGINT SIGTERM
+if ! $DEBUG ; then
+  trap '{ clean_up; }' EXIT SIGINT SIGTERM
+fi
 
 # Lets start ;)
 read_args $@
