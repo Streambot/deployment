@@ -27,6 +27,7 @@
 set -e
 set -x
 
+TERMINATE=true
 SSH_TIMEOUT="300"
 SSH_ATTEMPTS="3"
 SSH_TRIES="30"
@@ -294,11 +295,16 @@ function read_args {
       -x|--chef-role) CHEF_ROLE="$1" ;;
       *) ;;
     esac
-    shift
+    if [ "$key" == "--no-terminate" ]; then
+      TERMINATE=false
+    else
+      shift
+    fi
   done
   # filter the repo name from the git_chef
   echo "--> Instance name: ${INSTANCE_NAME}"
   CWD="create_ami_${INSTANCE_NAME}_`date -u | sed -e 's/\ /-/g'`"
+  echo "--> Terminate: ${TERMINATE}"
   echo "--> Berkshelf sources: ${BERKSHELF_SRC}"
   echo "--> Git branch: ${GIT_BRANCH}"
   echo "--> Key pair: ${KEY_PAIR}"
@@ -334,7 +340,7 @@ function clean_up {
 }
 
 # On ir-/regular exit, invoke clean up
-if ! $DEBUG ; then
+if $TERMINATE ; then
   trap '{ clean_up; }' EXIT SIGINT SIGTERM
 fi
 
