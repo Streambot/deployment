@@ -33,7 +33,6 @@ fi
 echo "--> Debug mode: $DEBUG"
 set -e
 
-TERMINATE=true
 SSH_TIMEOUT="300"
 SSH_ATTEMPTS="3"
 SSH_TRIES="30"
@@ -276,7 +275,7 @@ function generate_ami {
 
 function read_args {
   h "Reading arguments"
-
+  
   while [[ $# > 1 ]]
   do
     key="$1"
@@ -342,7 +341,7 @@ function clean_up {
 }
 
 # On ir-/regular exit, invoke clean up
-if $TERMINATE ; then
+if [ $TERMINATE = "true" ] ; then
   trap '{ clean_up; }' EXIT SIGINT SIGTERM
 fi
 
