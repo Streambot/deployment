@@ -274,7 +274,6 @@ function generate_ami {
   done
 }
 
-
 function read_args {
   h "Reading arguments"
 
@@ -282,6 +281,10 @@ function read_args {
   do
     key="$1"
     shift
+    if [ "$key" = "--no-terminate" ]; then
+      TERMINATE=false
+      continue
+    fi
     case $key in
       -c|--berkshelf-src) BERKSHELF_SRC="$1" ;;
       -b|--git-branch) GIT_BRANCH="$1" ;;
@@ -298,11 +301,7 @@ function read_args {
       -x|--chef-role) CHEF_ROLE="$1" ;;
       *) ;;
     esac
-    if [ "$key" == "--no-terminate" ]; then
-      TERMINATE=false
-    else
-      shift
-    fi
+    shift
   done
   # filter the repo name from the git_chef
   echo "--> Instance name: ${INSTANCE_NAME}"
