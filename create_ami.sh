@@ -24,16 +24,19 @@
 # THE SOFTWARE.
 ################################################################################
 
+
+if [ "$DEBUG" != "true" ]; then
+  DEBUG=false
+else
+  set -x
+fi
+echo "--> Debug mode: $DEBUG"
 set -e
-set -x
 
 TERMINATE=true
 SSH_TIMEOUT="300"
 SSH_ATTEMPTS="3"
 SSH_TRIES="30"
-
-[ "$DEBUG" != "true" ] && DEBUG=false
-echo "--> Debug mode: $DEBUG"
 
 # Check the VERSION and give it a default value if not set.
 [ "$VERSION" == "" ] && VERSION=`date +%Y-%m-%d-%H-%M`
