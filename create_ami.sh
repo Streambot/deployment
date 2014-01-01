@@ -275,7 +275,7 @@ function generate_ami {
 
 function read_args {
   h "Reading arguments"
-  
+
   while [[ $# > 1 ]]
   do
     key="$1"
@@ -331,7 +331,7 @@ function clean_up {
   # so that commands do not interfere.
   set +e
   # If there is an instanceId, terminate the instance referenced by the ID
-  if [ "$instanceId" != "" ]; then
+  if [ "$TERMINATE" = "true" -a "$instanceId" != "" ]; then
     aws ec2 terminate-instances --instance-ids $instanceId > /dev/null
   fi
   # Now get back to strict check mode
@@ -341,9 +341,7 @@ function clean_up {
 }
 
 # On ir-/regular exit, invoke clean up
-if [ $TERMINATE = "true" ] ; then
-  trap '{ clean_up; }' EXIT SIGINT SIGTERM
-fi
+trap '{ clean_up; }' EXIT SIGINT SIGTERM
 
 # Lets start ;)
 read_args $@
