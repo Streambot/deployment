@@ -221,9 +221,15 @@ EOC"
 
   # Now we inject the correct/given provisioning script to the machine
   echo "--> Run custom provision script"
-  remote_send ../../../"_${CHEF_ROLE}.provision.sh" /tmp/provision.sh
+  PROVISION=`cat ../../../_${CHEF_ROLE}.provision.sh`
+  if [ "$CHEF_ROLE" = "api" ]; then
+    PROVISION=`echo $PROVISION | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
+  fi
+  PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
+  PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
+  remote_call "echo $PROVISION > /etc/provision.sh"
   # After injection is done, we simple call the provisioning script.
-  remote_call "bash /tmp/provision.sh $@"
+  remote_call "bash /etc/provision.sh $@"
 
   echo "--> Running Chef Solo"
   # Now there must be a file created at /root/attributes.json which will now

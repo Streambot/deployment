@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 ################################################################################
 # The MIT License (MIT)
@@ -24,28 +24,18 @@
 # THE SOFTWARE.
 ################################################################################
 
-set -e
-set -x
+# A provisioning bash script to setup the final variables on a service instance.
 
-sudo aptitude update
-sudo aptitude -y safe-upgrade
+# Determine the IP address of the machine
+internalIp=`ifconfig eth0 | grep 'inet addr' | awk '{print $2}' | cut -d: -f2`
+internalIp=${internalIp//./-}
 
-# set the attributes file
-cat > /etc/chef/attributes.json <<EOC
-{
-  "override_attributes": {
-  	"streambot-api": {
-  		"database": {
-  			"host": "#{API_REXSTER_HOST}""
-  		}
-  	},
-  	"aws_instance": {
-  		"role": "#{AWS_INSTANCE_SERVICE}",
-  		"env": "#{AWS_INSTANCE_ENV}"
-  	}
-  },
-  "run_list": [
-    "role[api]"
-  ]
-}
+# Update the chef solo provisioning meta data to put the IP address in the node name and set the 
+# chef environment to production
+cat > /etc/chef/solo.rb <<EOC
+node_name "prod-eu-api-$internalIp"
+environment "production"
 EOC
+
+# Run chef solo to put the final data into action
+chef-solo -j /etc/chef/attributes.json

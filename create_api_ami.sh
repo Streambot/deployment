@@ -24,28 +24,14 @@
 # THE SOFTWARE.
 ################################################################################
 
-set -e
-set -x
+BUILD_TAG=$BUILD_TAG build-ami \
+--instance-type t1.micro \
+--subnet-id subnet-1c88807e \
+--security-group-id sg-1fecfa7d \
+--chef-env production \
+--chef-role api \
+--instance-name AMI_test
 
-sudo aptitude update
-sudo aptitude -y safe-upgrade
-
-# set the attributes file
-cat > /etc/chef/attributes.json <<EOC
-{
-  "override_attributes": {
-  	"streambot-api": {
-  		"database": {
-  			"host": "#{API_REXSTER_HOST}""
-  		}
-  	},
-  	"aws_instance": {
-  		"role": "#{AWS_INSTANCE_SERVICE}",
-  		"env": "#{AWS_INSTANCE_ENV}"
-  	}
-  },
-  "run_list": [
-    "role[api]"
-  ]
-}
-EOC
+AWS_INSTANCE_ENV
+AWS_INSTANCE_SERVICE
+API_REXSTER_HOST

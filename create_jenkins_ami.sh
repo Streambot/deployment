@@ -24,28 +24,15 @@
 # THE SOFTWARE.
 ################################################################################
 
-set -e
-set -x
-
-sudo aptitude update
-sudo aptitude -y safe-upgrade
-
-# set the attributes file
-cat > /etc/chef/attributes.json <<EOC
-{
-  "override_attributes": {
-  	"streambot-api": {
-  		"database": {
-  			"host": "#{API_REXSTER_HOST}""
-  		}
-  	},
-  	"aws_instance": {
-  		"role": "#{AWS_INSTANCE_SERVICE}",
-  		"env": "#{AWS_INSTANCE_ENV}"
-  	}
-  },
-  "run_list": [
-    "role[api]"
-  ]
-}
-EOC
+DEBUG=true ./create_ami.sh \
+--berkshelf-src `pwd` \
+--instance-type t1.micro \
+--subnet-id subnet-1c88807e \
+--security-group-id sg-1fecfa7d \
+--ami-id ami-07cb2670 \
+--chef-git git@bitbucket.org:streambot/chef.git \
+--chef-env production \
+--chef-role jenkins \
+--instance-name Jenkins_dev \
+--key-pair ~/Dropbox/channel/aws/martin_biermann.pem \
+--key-pair-name martin_biermann
