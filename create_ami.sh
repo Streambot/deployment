@@ -227,6 +227,7 @@ EOC"
   fi
   PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
   PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
+  echo $PROVISION
   remote_call "echo ${PROVISION} > /etc/provision.sh"
   # After injection is done, we simple call the provisioning script.
   remote_call "bash /etc/provision.sh $@"
