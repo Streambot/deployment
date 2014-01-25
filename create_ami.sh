@@ -227,15 +227,9 @@ EOC"
   fi
   PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
   PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
-  echo $PROVISION > provision.sh
-  remote_send provision.sh /etc/provision.sh
+  remote_call "sudo cat $PROVISION > /etc/provision.sh"
   # After injection is done, we simple call the provisioning script.
   remote_call "bash /etc/provision.sh $@"
-
-  echo "--> Running Chef Solo"
-  # Now there must be a file created at /root/attributes.json which will now
-  # be called with chef-solo
-  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json -l debug"
 }
 
 # This one will test whether our ami is ready to be created.
