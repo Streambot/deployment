@@ -230,8 +230,8 @@ EOC"
   if [ "$CHEF_ROLE" = "api" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
   fi
-  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
-  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$CHEF_ROLE/"`
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$CHEF_ENV/"`
 
   echo $ATTRIBUTES > attributes.json
   remote_send attributes.json $ATTRIBUTES_FILE
