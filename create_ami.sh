@@ -215,9 +215,11 @@ cookbook_path ['/var/chef/cookbooks','/var/chef/site-cookbooks']
 EOC"
 
   # Create an attributes configuration file to initialize chef-solo provisioning
+
+  ATTRIBUTES_FILE=/etc/chef/attributes.json
   echo "--> Set up chef attributed config JSON file"
-  remote_call "sudo touch /etc/chef/attributes.json"
-  remote_call "sudo chown ubuntu /etc/chef/attributes.json"
+  remote_call "sudo touch ${ATTRIBUTES_FILE}"
+  remote_call "sudo chown ubuntu ${ATTRIBUTES_FILE}"
 
   remote_call "sudo aptitude update"
   remote_call "sudo aptitude -y safe-upgrade"
@@ -230,10 +232,10 @@ EOC"
   fi
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
+
   echo $ATTRIBUTES > attributes.json
-  if [ "$DEBUG" != "true" ] cat attributes.json
-  remote_send attributes.json /etc/chef/attributes.json
-  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json -l debug"
+  remote_send attributes.json $ATTRIBUTES_FILE
+  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j ${ATTRIBUTES_FILE} -l debug"
 }
 
 # This one will test whether our ami is ready to be created.
