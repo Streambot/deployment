@@ -219,17 +219,21 @@ EOC"
   remote_call "sudo touch /etc/chef/attributes.json"
   remote_call "sudo chown ubuntu /etc/chef/attributes.json"
 
+  remote_call "sudo aptitude update"
+  remote_call "sudo aptitude -y safe-upgrade"
+
   # Now we inject the correct/given provisioning script to the machine
-  echo "--> Run custom provision script"
-  PROVISION=`cat ../../../_${CHEF_ROLE}.provision.sh`
+  echo "--> Upload Chef attributes"
+  ATTRIBUTES=`cat ${CHEF_ROLE}.attributes.json`
   if [ "$CHEF_ROLE" = "api" ]; then
-    PROVISION=`echo $PROVISION | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
+    ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
   fi
-  PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
-  PROVISION=`echo $PROVISION | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
-  remote_call "sudo cat $PROVISION > /etc/provision.sh"
-  # After injection is done, we simple call the provisioning script.
-  remote_call "bash /etc/provision.sh $@"
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$AWS_INSTANCE_SERVICE/"`
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$AWS_INSTANCE_ENV/"`
+  echo $ATTRIBUTES > attributes.json
+  if [ "$DEBUG" != "true" ] cat attributes.json
+  remote_send attributes.json /etc/chef/attributes.json
+  remote_call "sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json -l debug"
 }
 
 # This one will test whether our ami is ready to be created.

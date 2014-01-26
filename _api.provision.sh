@@ -49,5 +49,3 @@ cat > /etc/chef/attributes.json <<EOC
   ]
 }
 EOC
-
-sudo chef-solo -c /etc/chef/solo.rb -j /etc/chef/attributes.json -l debug
