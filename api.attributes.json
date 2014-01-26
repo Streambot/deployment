@@ -1,0 +1,16 @@
+{
+  "override_attributes": {
+  	"streambot-api": {
+  		"database": {
+  			"host": "#{API_REXSTER_HOST}"
+  		}
+  	},
+  	"aws_instance": {
+  		"role": "#{AWS_INSTANCE_SERVICE}",
+  		"env": "#{AWS_INSTANCE_ENV}"
+  	}
+  },
+  "run_list": [
+    "role[api]"
+  ]
+}
