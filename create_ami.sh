@@ -203,6 +203,8 @@ function setup_instance {
   remote_send chef.tar.gz /tmp/
   remote_call "sudo tar -xzf /tmp/chef.tar.gz -C /var/chef/"
 
+  cd ../../
+
   # Generate solo.rb
   echo "--> Setting up solo.rb"
   remote_call "sudo mkdir -p /etc/chef/"
