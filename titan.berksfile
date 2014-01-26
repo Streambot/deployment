@@ -1,0 +1,5 @@
+site :opscode
+
+cookbook 'apt'
+cookbook 'titan', git: 'git://github.com/mbiermann/chef-titan.git'
+cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh

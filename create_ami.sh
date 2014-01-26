@@ -226,6 +226,12 @@ EOC"
   remote_call "sudo aptitude update"
   remote_call "sudo aptitude -y safe-upgrade"
 
+  provision_file="${CHEF_ROLE}.provision.sh"
+  if [ -f provision_file ]; then 
+    remote_send provision_file /tmp/provision.sh
+    remote_call "bash /tmp/provision.sh"
+  fi
+
   # Now we inject the correct/given provisioning script to the machine
   echo "--> Upload Chef attributes"
   ATTRIBUTES=`cat ${CHEF_ROLE}.attributes.json`
@@ -342,11 +348,11 @@ function clean_up {
   # If there is an instanceId, terminate the instance referenced by the ID
   if [ "$TERMINATE" = "true" -a "$instanceId" != "" ]; then
     aws ec2 terminate-instances --instance-ids $instanceId > /dev/null
+    # Remove the working directory
+    rm -rf $CWD
   fi
   # Now get back to strict check mode
   set -e
-  # Remove the working directory
-  rm -rf $CWD
 }
 
 # On ir-/regular exit, invoke clean up
