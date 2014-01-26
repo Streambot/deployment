@@ -38,7 +38,7 @@ SSH_ATTEMPTS="3"
 SSH_TRIES="30"
 
 # Check the VERSION and give it a default value if not set.
-[ "$VERSION" == "" ] && VERSION=`date +%Y-%m-%d-%H-%M`
+[ "$VERSION" == "" ] && VERSION="`date +%Y-%m-%d-%H-%M`_`${BUILD_TAG} | tr ' ' '-'`"
 
 # The recheck interval we test whether the ami was created successfully
 AMI_EXIST_CHECK_INTERVAL="60"
