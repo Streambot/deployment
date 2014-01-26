@@ -319,7 +319,7 @@ function read_args {
   done
   # filter the repo name from the git_chef
   echo "--> Instance name: ${INSTANCE_NAME}"
-  CWD="create_ami_${INSTANCE_NAME}_`date -u | sed -e 's/\ /-/g'`"
+  CWD="create_ami_${INSTANCE_NAME}"
   echo "--> Terminate: ${TERMINATE}"
   echo "--> Berkshelf sources: ${BERKSHELF_SRC}"
   echo "--> Git branch: ${GIT_BRANCH}"
@@ -332,7 +332,7 @@ function read_args {
   echo "--> Region: ${REGION}"
   echo "--> Chef environment: ${CHEF_ENV}"
   echo "--> Chef role: ${CHEF_ROLE}"
-  echo "--> Chef git repository: ${CWD}"
+  echo "--> Chef git repository: ${CHEF_GIT}"
   echo "--> SSH max tries: ${SSH_TRIES}"
   echo "--> SSH timeout: ${SSH_TIMEOUT}"
   echo "--> SSH max connection attempts: ${SSH_ATTEMPTS}"
