@@ -237,6 +237,7 @@ EOC"
   ATTRIBUTES=`cat ${CHEF_ROLE}.attributes.json`
   if [ "$CHEF_ROLE" = "api" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
+    ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{GRAPHITE_HOST}/$GRAPHITE_HOST/"`
   fi
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$CHEF_ROLE/"`
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$CHEF_ENV/"`
