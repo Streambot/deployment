@@ -1,8 +1,10 @@
 {
-	"streambot-api": {
-		"database": {
-			"host": "#{API_REXSTER_HOST}"
-		}
+	"streambot_api": {
+    "config": {
+  		"database": {
+  			"host": "#{API_REXSTER_HOST}"
+  		}
+    }
 	},
 	"aws_instance": {
 		"role": "#{AWS_INSTANCE_SERVICE}",
