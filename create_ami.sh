@@ -299,6 +299,10 @@ function read_args {
       TERMINATE=false
       continue
     fi
+    if [ "$key" = "--create-ami" ]; then
+      CREATE_AMI=true
+      continue
+    fi
     case $key in
       -c|--berkshelf-src) BERKSHELF_SRC="$1" ;;
       -b|--git-branch) GIT_BRANCH="$1" ;;
@@ -336,6 +340,7 @@ function read_args {
   echo "--> SSH max tries: ${SSH_TRIES}"
   echo "--> SSH timeout: ${SSH_TIMEOUT}"
   echo "--> SSH max connection attempts: ${SSH_ATTEMPTS}"
+  echo "--> Create an AMI: ${CREATE_AMI}"
 }
 
 # Here we will cleanup everything after ami was created.
@@ -364,7 +369,7 @@ start_instance
 remote_test
 setup_instance $@
 test_instance
-generate_ami $@
+[ "$CREATE_AMI" = "true" ] && generate_ami $@
 
 # echo ami id to easily copy jenkins output
 echo "AMI-ID: $amiId"
