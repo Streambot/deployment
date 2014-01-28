@@ -4,11 +4,11 @@
   		"database": {
   			"host": "#{API_REXSTER_HOST}"
   		}
-    },
-    "statsd": {
-      "graphite_host": "#{GRAPHITE_HOST}"
     }
 	},
+  "statsd": {
+    "graphite_host": "#{GRAPHITE_HOST}"
+  },
 	"aws_instance": {
 		"role": "#{AWS_INSTANCE_SERVICE}",
 		"env": "#{AWS_INSTANCE_ENV}"
