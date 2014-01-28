@@ -3,7 +3,10 @@
     "config": {
   		"database": {
   			"host": "#{API_REXSTER_HOST}"
-  		}
+  		},
+      "server": {
+        "port": 80
+      },
     },
     "statsd": {
       "graphite_host": "#{GRAPHITE_HOST}"
