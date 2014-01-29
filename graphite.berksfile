@@ -2,4 +2,5 @@ site :opscode
 
 cookbook 'apt'
 cookbook 'graphite', git: 'git://github.com/hw-cookbooks/graphite.git'
+cookbook 'chef-streambot-graphite', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-graphite', protocol: :ssh
 cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh
