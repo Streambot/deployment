@@ -1,6 +1,7 @@
 site :opscode
 
+metadata
+
 cookbook 'apt'
-cookbook 'cassandra-opscenter', git: 'git://github.com/michaelklishin/cassandra-chef-cookbook.git'
 cookbook 'titan', git: 'git://github.com/mbiermann/chef-titan.git'
 cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh
