@@ -183,7 +183,7 @@ function setup_instance {
   git submodule init
   git submodule update
 
-  cp $BERKSHELF_SRC/"${CHEF_ROLE}.berksfile" Berksfile
+  cp "${CHEF_ROLE}.berksfile" Berksfile
   berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
@@ -305,7 +305,6 @@ function read_args {
       continue
     fi
     case $key in
-      -c|--berkshelf-src) BERKSHELF_SRC="$1" ;;
       -b|--git-branch) GIT_BRANCH="$1" ;;
       -p|--key-pair) KEY_PAIR="$1" ;;
       -d|--key-pair-name) KEY_PAIR_NAME="$1" ;;
@@ -326,7 +325,6 @@ function read_args {
   echo "--> Instance name: ${INSTANCE_NAME}"
   CWD="create_ami_${INSTANCE_NAME}"
   echo "--> Terminate: ${TERMINATE}"
-  echo "--> Berkshelf sources: ${BERKSHELF_SRC}"
   echo "--> Git branch: ${GIT_BRANCH}"
   echo "--> Key pair: ${KEY_PAIR}"
   echo "--> Key pair name: ${KEY_PAIR_NAME}"
