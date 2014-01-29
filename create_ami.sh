@@ -183,7 +183,7 @@ function setup_instance {
   git submodule init
   git submodule update
 
-  cp "${CHEF_ROLE}.berksfile" Berksfile
+  cp "$CWD"/"${CHEF_ROLE}.berksfile" Berksfile
   berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
