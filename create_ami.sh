@@ -183,7 +183,7 @@ function setup_instance {
   git submodule init
   git submodule update
 
-  cp "$CWD"/"${CHEF_ROLE}.berksfile" Berksfile
+  cp "$ROOT"/"${CHEF_ROLE}.berksfile" Berksfile
   berks install --path cookbooks
 
   # We now generate a tarball out of the chef repository.
@@ -363,6 +363,7 @@ function clean_up {
 trap '{ clean_up; }' EXIT SIGINT SIGTERM
 
 # Lets start ;)
+ROOT=`pwd`
 read_args $@
 start_instance
 remote_test
