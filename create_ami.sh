@@ -238,7 +238,7 @@ EOC"
   if [ "$CHEF_ROLE" = "api" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{GRAPHITE_HOST}/$GRAPHITE_HOST/"`
-  elif [ "$CHEF_ROLE" = "opscode" ]; then
+  elif [ "$CHEF_ROLE" = "opscenter" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{OPSCENTER_CLUSTER_NAME}/$OPSCENTER_CLUSTER_NAME/"`
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{OPSCENTER_SEEDS}/$OPSCENTER_SEEDS/"`
   fi
