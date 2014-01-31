@@ -2,5 +2,5 @@ site :opscode
 
 cookbook 'apt'
 cookbook 'java'
-cookbook 'titan', github: 'mbiermann/chef-titan'
+cookbook 'cassandra-chef-cookbook',  github: 'michaelklishin/cassandra-chef-cookbook'
 cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh

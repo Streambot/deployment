@@ -1,5 +1,12 @@
 {
-  "run_list": [
-    "role[titan]"
-  ]
+	"ssh_access": {
+      "ssh": {
+        "authorized_keys":  [
+          "#{OPSCENTER_SSH_PUBLIC_KEY}"
+        ],
+      }
+    },
+	"run_list": [
+		"role[titan]"
+	]
 }

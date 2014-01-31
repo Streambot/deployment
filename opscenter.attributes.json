@@ -1,0 +1,13 @@
+{
+	"opscenter": {
+		"clusters": {
+			"#{OPSCENTER_CLUSTER_NAME}": {
+				"seeds": "#{OPSCENTER_SEEDS}"
+			}
+		}
+	},
+	"run_list": [
+		"recipe[chef-streambot-aws::ssh_access]",
+		"role[opscenter]"
+	]
+}
