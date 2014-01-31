@@ -1,11 +1,11 @@
 {
 	"ssh_access": {
-      "ssh": {
-        "authorized_keys":  [
-          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqL7Jn4fMJruGia+9z4z6NG12q9IwkEa1HG4RQk9V8hDM4qquZgKlqXlBIKcm6k5o0Cj+RQbUhpzsvrBBFYQHopukHA4vxbx6qMbqdG8KB4EAfRukS/2MY/KdGIIHhV3PIxXzgHBtpWLCEBYlzARLX9Xod8oQLHc3N6ryiWqZu/cUYWn+/Y5rHO6yHxg2zr1LNPt5ZkiS1VdqS6rmllZ0MJs+2YTT1AEmyLdLrkZOCDUU2O6ngZlCBrbunPRkxMW9XD++rGzs+1pdu9178LhYaXS0C1IGnJTZBBa9lD840xH9zz6mMFBSTummR21Zz2dvMuxd60qzX+IysoKuqDhXJ opscenter"
-        ],
-      }
-    },
+    "ssh": {
+      "authorized_keys":  [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqL7Jn4fMJruGia+9z4z6NG12q9IwkEa1HG4RQk9V8hDM4qquZgKlqXlBIKcm6k5o0Cj+RQbUhpzsvrBBFYQHopukHA4vxbx6qMbqdG8KB4EAfRukS/2MY/KdGIIHhV3PIxXzgHBtpWLCEBYlzARLX9Xod8oQLHc3N6ryiWqZu/cUYWn+/Y5rHO6yHxg2zr1LNPt5ZkiS1VdqS6rmllZ0MJs+2YTT1AEmyLdLrkZOCDUU2O6ngZlCBrbunPRkxMW9XD++rGzs+1pdu9178LhYaXS0C1IGnJTZBBa9lD840xH9zz6mMFBSTummR21Zz2dvMuxd60qzX+IysoKuqDhXJ opscenter"
+      ]
+    }
+  },
 	"run_list": [
 		"role[titan]"
 	]
