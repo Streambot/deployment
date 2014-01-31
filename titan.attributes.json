@@ -1,13 +1,11 @@
 {
 	"ssh_access": {
-    "ssh": {
-      "ubuntu": {
-        "home": "/home/ubuntu",
-        "authorized_keys":  [
-          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqL7Jn4fMJruGia+9z4z6NG12q9IwkEa1HG4RQk9V8hDM4qquZgKlqXlBIKcm6k5o0Cj+RQbUhpzsvrBBFYQHopukHA4vxbx6qMbqdG8KB4EAfRukS/2MY/KdGIIHhV3PIxXzgHBtpWLCEBYlzARLX9Xod8oQLHc3N6ryiWqZu/cUYWn+/Y5rHO6yHxg2zr1LNPt5ZkiS1VdqS6rmllZ0MJs+2YTT1AEmyLdLrkZOCDUU2O6ngZlCBrbunPRkxMW9XD++rGzs+1pdu9178LhYaXS0C1IGnJTZBBa9lD840xH9zz6mMFBSTummR21Zz2dvMuxd60qzX+IysoKuqDhXJ opscenter",
-          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCXKQxK4RbmtxFr7fqjxHJ3KupQovCjySeOyF4vrEF6cRARFDlTa4mt2Y4Sqy2JyYJ++VZugrvK+bQ/C9oq6UlP0U3gTEYQUJ2udxJKdLCr5aVbisNl1pz5kAPLJnlkReUkPhH41prOBrgSfyQac7LguGiHM6utlXXARsFchQdY2EaRyX9chlQnfI7y8DrIO3z2i/XMg0ok3nSv+OR1NH1cjR4A9ztkx44Tsaf50xepXrmx0ZEMWcGhFxtGr7bXsyd0UV8X6Lqvg08zFztxTg+1R8DmQvPZBjcmINE8xuVltvSft0+P8A7cs2cA84cu3RfDbU9rBgMzPxamrmAdkK4J martin.biermann@trademob.com"
-        ]
-      }
+    "ubuntu": {
+      "home": "/home/ubuntu",
+      "authorized_keys":  [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqL7Jn4fMJruGia+9z4z6NG12q9IwkEa1HG4RQk9V8hDM4qquZgKlqXlBIKcm6k5o0Cj+RQbUhpzsvrBBFYQHopukHA4vxbx6qMbqdG8KB4EAfRukS/2MY/KdGIIHhV3PIxXzgHBtpWLCEBYlzARLX9Xod8oQLHc3N6ryiWqZu/cUYWn+/Y5rHO6yHxg2zr1LNPt5ZkiS1VdqS6rmllZ0MJs+2YTT1AEmyLdLrkZOCDUU2O6ngZlCBrbunPRkxMW9XD++rGzs+1pdu9178LhYaXS0C1IGnJTZBBa9lD840xH9zz6mMFBSTummR21Zz2dvMuxd60qzX+IysoKuqDhXJ opscenter",
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCXKQxK4RbmtxFr7fqjxHJ3KupQovCjySeOyF4vrEF6cRARFDlTa4mt2Y4Sqy2JyYJ++VZugrvK+bQ/C9oq6UlP0U3gTEYQUJ2udxJKdLCr5aVbisNl1pz5kAPLJnlkReUkPhH41prOBrgSfyQac7LguGiHM6utlXXARsFchQdY2EaRyX9chlQnfI7y8DrIO3z2i/XMg0ok3nSv+OR1NH1cjR4A9ztkx44Tsaf50xepXrmx0ZEMWcGhFxtGr7bXsyd0UV8X6Lqvg08zFztxTg+1R8DmQvPZBjcmINE8xuVltvSft0+P8A7cs2cA84cu3RfDbU9rBgMzPxamrmAdkK4J martin.biermann@trademob.com"
+      ]
     }
   },
 	"run_list": [
