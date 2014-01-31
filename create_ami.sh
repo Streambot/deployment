@@ -238,9 +238,6 @@ EOC"
   if [ "$CHEF_ROLE" = "api" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_REXSTER_HOST}/$API_REXSTER_HOST/"`
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{GRAPHITE_HOST}/$GRAPHITE_HOST/"`
-  elif [ "$CHEF_ROLE" = "opscenter" ]; then
-    # Print public SSH key of Opscenter user
-    remote_call "sudo cat /root/.ssh/id_rsa.pub"
   fi
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$CHEF_ROLE/"`
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$CHEF_ENV/"`
