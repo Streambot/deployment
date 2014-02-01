@@ -1,4 +1,8 @@
 {
+  "aws_instance": {
+    "role": "#{AWS_INSTANCE_SERVICE}",
+    "env": "#{AWS_INSTANCE_ENV}"
+  },
 	"ssh_access": {
     "ubuntu": {
       "home": "/home/ubuntu",
