@@ -1,6 +1,6 @@
 site :opscode
 
-cookbook 'jenkins'
+cookbook 'jenkins', tag: '2.0.2'
 cookbook 'chef-streambot-scm-access', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-scm-access', protocol: :ssh
 cookbook 'chef-streambot-jenkins', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-jenkins', protocol: :ssh
 cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh
