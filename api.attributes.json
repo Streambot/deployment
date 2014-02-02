@@ -13,6 +13,9 @@
 		"role": "#{AWS_INSTANCE_SERVICE}",
 		"env": "#{AWS_INSTANCE_ENV}"
 	},
+  "collectd": {
+    "graphite_host": "#{GRAPHITE_HOST}"
+  },
   "run_list": [
     "role[api]"
   ]

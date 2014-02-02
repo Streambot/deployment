@@ -12,6 +12,9 @@
       ]
     }
   },
+  "collectd": {
+    "graphite_host": "#{GRAPHITE_HOST}"
+  },
 	"run_list": [
 		"role[titan]"
 	]
