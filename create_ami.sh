@@ -244,6 +244,8 @@ EOC"
   fi
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$CHEF_ROLE/"`
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$CHEF_ENV/"`
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{GRAPHITE_HOST}/$CHEF_HOST/"`
+  ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{GRAPHITE_PORT}/$GRAPHITE_PORT/"`
 
   echo $ATTRIBUTES > attributes.json
   remote_send attributes.json $ATTRIBUTES_FILE
