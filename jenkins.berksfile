@@ -4,4 +4,3 @@ cookbook 'jenkins', tag: '2.0.2'
 cookbook 'chef-streambot-scm-access', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-scm-access', protocol: :ssh
 cookbook 'chef-streambot-jenkins', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-jenkins', protocol: :ssh
 cookbook 'chef-streambot-aws', git: 'git@bitbucket.org:streambot/chef.git', rel: 'cookbooks/chef-streambot-aws', protocol: :ssh
-cookbook 'collectd-write-graphite', github: 'nickryand/collectd-write-graphite', ref: 'baa3f0487cd4dd601ecd722cae343a1b402f34f5'
