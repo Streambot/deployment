@@ -242,6 +242,8 @@ EOC"
   elif [ "$CHEF_ROLE" = "opscenter" ]; then
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{OPSCENTER_CLUSTER_NAME}/$OPSCENTER_CLUSTER_NAME/"`
     ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{OPSCENTER_SEEDS}/$OPSCENTER_SEEDS/"`
+  elif [ "$CHEF_ROLE" = "test" ]; then
+    ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{API_HOSTS}/$API_HOSTS/"`
   fi
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_SERVICE}/$CHEF_ROLE/"`
   ATTRIBUTES=`echo $ATTRIBUTES | sed "s/#{AWS_INSTANCE_ENV}/$CHEF_ENV/"`
