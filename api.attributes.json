@@ -4,6 +4,9 @@
   		"database": {
   			"host": "#{API_REXSTER_HOST}"
   		}
+    },
+    "scm": {
+      "git_revision": "#{API_GIT_BRANCH}"
     }
 	},
   "statsd": {
