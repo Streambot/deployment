@@ -1,0 +1,25 @@
+{
+	"streambot_test": {
+    "config": { 
+      "api_hosts": [#{API_HOSTS}],
+      "sample_rate": 0,
+      "create_channel_throttle": 0,
+      "subscribe_channel_throttle": 0,
+      "get_subscription_throttle": 0,
+      "num_workers": 0
+    }
+	},
+  "statsd": {
+    "graphite_host": "#{GRAPHITE_HOST}"
+  },
+	"aws_instance": {
+		"role": "#{AWS_INSTANCE_SERVICE}",
+		"env": "#{AWS_INSTANCE_ENV}"
+	},
+  "collectd": {
+    "graphite_host": "#{GRAPHITE_HOST}"
+  },
+  "run_list": [
+    "role[test]"
+  ]
+}
